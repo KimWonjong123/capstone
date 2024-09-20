@@ -1,10 +1,15 @@
 package capstone.capbackend.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity(name = "user_tbl")
+import java.time.LocalDateTime;
+
+@Table(name = "user_tbl")
 @Getter
 @Builder
 @ToString
@@ -12,17 +17,23 @@ import lombok.*;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column
-    @NotNull
-    private String email;
+    private String userId;
 
     @Column
-    @NotNull
+    private String nickname;
+
+    @Column
     private String oauthType;
 
     @Column
     private String oauthSub;
+
+    @CreatedDate
+    private LocalDateTime insertTime;
+
+    @LastModifiedDate
+    private LocalDateTime updateTime;
 }

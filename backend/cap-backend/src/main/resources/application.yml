@@ -1,21 +1,27 @@
 spring:
   application:
     name: cap-backend
-  datasource:
-    hikari:
-      maximum-pool-size: 10
-    url: jdbc:postgresql://localhost:5432/capstone?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/capstone?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: postgres
     password: 1234
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database: postgresql
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/capstone?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    username: postgres
+#    password: 1234
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    database: postgresql
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
 secret:
   jwt:
     key: 271f5ed2749b9a7f2131fe71d6ed01bcb46adb5fde23e5257a9fbc68059dc6f0210c73b984159d0e968c18dea808c48ea44765e4796c440b717f9c3783aff9b1
@@ -23,3 +29,6 @@ secret:
     url: localhost
     port: 6379
     password: 1234
+  kakao:
+    client-id: 8bccd7e2ee7227d7de779aa3c538806f
+    redirect-url: http://localhost:8080/auth/oauth/kakao

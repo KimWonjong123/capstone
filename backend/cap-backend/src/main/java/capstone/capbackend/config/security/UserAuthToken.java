@@ -30,7 +30,7 @@ public class UserAuthToken extends AbstractAuthenticationToken {
     public boolean isAuthenticated() { return true; }
 
     public UserAuthToken(Claims claims) {
-        super(List.of(new SimpleGrantedAuthority(claims.get(CLAIM_KEY_ROLE).toString())));
+        super(List.of(new SimpleGrantedAuthority("ROLE")));
         this.userId = claims.getSubject();
         this.claims = new HashMap<>(claims);
     }

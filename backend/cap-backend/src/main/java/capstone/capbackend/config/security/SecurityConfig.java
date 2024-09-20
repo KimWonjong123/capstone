@@ -49,9 +49,10 @@ public class SecurityConfig {
                 .authenticationEntryPoint((ex, e) -> Mono.fromRunnable(() -> ex.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED)))
                 .accessDeniedHandler((ex, e) -> Mono.fromRunnable(() -> ex.getResponse().setStatusCode(HttpStatus.FORBIDDEN)))
                 .and()
-                .authorizeExchange()
-                .anyExchange().permitAll()
-                .and()
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("auth/token/**").authenticated()
+                        .pathMatchers("/auth/**").permitAll()
+                        .anyExchange().authenticated())
                 .headers().frameOptions().mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN)
                 .and()
 //                .authorizeHttpRequests(auth -> auth

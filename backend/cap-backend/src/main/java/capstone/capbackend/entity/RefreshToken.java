@@ -7,6 +7,6 @@ import org.springframework.data.redis.core.RedisHash;
 public record RefreshToken(
         @Id
     String refreshToken,
-        Long userId,
+        @jakarta.validation.constraints.NotNull String userId,
         String userOauthType
 ) {}

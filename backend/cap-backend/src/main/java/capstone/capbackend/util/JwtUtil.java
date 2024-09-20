@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -65,8 +66,8 @@ public class JwtUtil {
                             }
                             String[] infos = res.split(":");
                             return Mono.just(User.builder()
-                                    .userId(Long.valueOf(infos[0]))
-                                    .oauthType(infos[2])
+                                    .userId(infos[0])
+                                    .oauthType(infos[1])
                                     .build());
                         })
                         .flatMap(user -> Mono.zip(
