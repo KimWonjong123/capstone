@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .accessDeniedHandler((ex, e) -> Mono.fromRunnable(() -> ex.getResponse().setStatusCode(HttpStatus.FORBIDDEN)))
                 .and()
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("auth/token/**").authenticated()
+//                        .pathMatchers("auth/token/**").authenticated()
                         .pathMatchers("/auth/**").permitAll()
                         .anyExchange().authenticated())
                 .headers().frameOptions().mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN)
