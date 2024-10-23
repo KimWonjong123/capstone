@@ -23,4 +23,13 @@ public class UserService {
     public Mono<JwtTokenVO> reissueToken(String rt) {
         return jwtUtil.reissueTokens(rt);
     }
+
+    public Mono<JwtTokenVO> testLogin(String id) {
+        return userRepository.findByUserId(id)
+                .switchIfEmpty(Mono.error(new RuntimeException("User not found")))
+                .flatMap(user -> jwtUtil.generateAccessToken(user)
+                        .zipWith(jwtUtil.generateRefreshToken(user))
+                        .map(tuple -> new JwtTokenVO(tuple.getT1(), tuple.getT2().refreshToken()))
+                );
+    }
 }

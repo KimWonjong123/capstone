@@ -56,4 +56,9 @@ public class AuthController {
                         )
                 );
     }
+
+    @PostMapping("/test/login")
+    public Mono<JwtTokenVO> testLogin(@RequestParam("id") String id) {
+        return userService.testLogin(id);
+    }
 }
