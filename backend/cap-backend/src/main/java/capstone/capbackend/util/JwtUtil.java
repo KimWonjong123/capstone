@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -35,7 +34,7 @@ public class JwtUtil {
     private String SECRET_KEY;
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private static final int ACCESS_TOKEN_EXPIRES = 1000 * 60 * 5;
+    private static final int ACCESS_TOKEN_EXPIRES = 1000 * 60 * 60;
     private static final String CLAIM_OAUTH_TYPE = "OAUTH_TYPE";
 
     public Mono<String> generateAccessToken(User user) {
