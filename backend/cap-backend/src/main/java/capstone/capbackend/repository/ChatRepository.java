@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ChatRepository extends ReactiveCrudRepository<Chat, Long> {
-    Flux<Chat> findByOwnerId(Long userId);
+    Flux<Chat> findByOwnerIdOrderByInsertTimeDesc(Long userId);
 
     Flux<Chat> findByOwnerIdAndNameContaining(Long userId, String name);
 

@@ -2,6 +2,7 @@ package capstone.capbackend.controller;
 
 import capstone.capbackend.config.security.UserInfo;
 import capstone.capbackend.config.security.UserPrincipal;
+import capstone.capbackend.dto.ChatInfoDTO;
 import capstone.capbackend.dto.CreateChatRequestDTO;
 import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
@@ -34,5 +35,20 @@ public class ChatController {
     @PostMapping("/join")
     public Mono<UserChat> joinChat(@RequestParam("chatId") Long chatId, @UserInfo UserPrincipal user) {
         return chatService.joinChat(chatId, Long.parseLong(user.getUsername()));
+    }
+
+    @GetMapping("/list/joining")
+    public Flux<ChatInfoDTO> getJoiningChats(@UserInfo UserPrincipal user) {
+        return chatService.getJoiningChats(Long.parseLong(user.getUsername()));
+    }
+
+    @GetMapping("/list/created")
+    public Flux<JoiningChatDTO> getCreatedChats(@UserInfo UserPrincipal user) {
+        return chatService.getCreatedChats(Long.parseLong(user.getUsername()));
+    }
+
+    @GetMapping("/list/created/joined")
+    public Flux<ChatInfoDTO> getJoinedCreatedChats(@RequestParam("chatId") Long chatId, @UserInfo UserPrincipal user) {
+        return chatService.getJoinedCreatedChats(chatId, Long.parseLong(user.getUsername()));
     }
 }

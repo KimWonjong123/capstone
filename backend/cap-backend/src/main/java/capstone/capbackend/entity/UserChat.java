@@ -1,9 +1,11 @@
 package capstone.capbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -35,5 +37,13 @@ public class UserChat {
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastChatTime;
+
+    @Transient
+    @Setter
+    private User user;
+
+    @Transient
+    @Setter
+    private Chat chat;
 
 }

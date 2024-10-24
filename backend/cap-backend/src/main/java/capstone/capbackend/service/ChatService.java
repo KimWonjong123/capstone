@@ -1,5 +1,6 @@
 package capstone.capbackend.service;
 
+import capstone.capbackend.dto.ChatInfoDTO;
 import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
 import capstone.capbackend.entity.Chat;
@@ -87,5 +88,51 @@ public class ChatService {
                                     .build()
                     );
                 });
+    }
+
+    public Flux<ChatInfoDTO> getJoiningChats(Long userId) {
+        return userChatRepository.findByUserIdOrderByLastChatTimeDesc(userId)
+                .flatMap(userChat -> Mono.zip(
+                        chatRepository.findById(userChat.getChatId()),
+                        userRepository.findById(userChat.getUserId()),
+                        Mono.just(userChat)
+                ))
+                .flatMap(tuple -> Flux.just(ChatInfoDTO.builder()
+                        .chatId(tuple.getT1().getId())
+                        .chatName(tuple.getT1().getName())
+                        .userId(tuple.getT1().getOwnerId())
+                        .userName(tuple.getT1().getOwnerName())
+                        .lastChatTime(tuple.getT3().getLastChatTime())
+                        .userChatId(tuple.getT3().getId())
+                        .build()));
+    }
+
+    public Flux<JoiningChatDTO> getCreatedChats(Long userId) {
+        return chatRepository.findByOwnerIdOrderByInsertTimeDesc(userId)
+                .flatMap(chat -> Flux.just(JoiningChatDTO.builder()
+                        .chatId(chat.getId())
+                        .chatName(chat.getName())
+                        .ownerId(chat.getOwnerId())
+                        .ownerName(chat.getOwnerName())
+                        .insertTime(chat.getInsertTime())
+                        .build())
+                );
+    }
+
+    public Flux<ChatInfoDTO> getJoinedCreatedChats(Long chatId, Long userId) {
+        return userChatRepository.findByChatIdOrderByLastChatTimeDesc(chatId)
+                .flatMap(userChat -> Mono.zip(
+                        chatRepository.findById(userChat.getChatId()),
+                        userRepository.findById(userChat.getUserId()),
+                        Mono.just(userChat)
+                ))
+                .flatMap(tuple -> Flux.just(ChatInfoDTO.builder()
+                        .chatId(tuple.getT1().getId())
+                        .chatName(tuple.getT1().getName())
+                        .userId(tuple.getT1().getOwnerId())
+                        .userName(tuple.getT1().getOwnerName())
+                        .lastChatTime(tuple.getT3().getLastChatTime())
+                        .userChatId(tuple.getT3().getId())
+                        .build()));
     }
 }

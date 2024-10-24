@@ -1,7 +1,6 @@
 package capstone.capbackend.repository;
 
 import capstone.capbackend.entity.UserChat;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -13,4 +12,5 @@ public interface UserChatRepository extends ReactiveCrudRepository<UserChat, Lon
 
     Mono<UserChat> findByUserIdAndChatId(Long userId, Long chatId);
 
+    Flux<UserChat> findByChatIdOrderByLastChatTimeDesc(Long chatId);
 }
