@@ -4,6 +4,7 @@ import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
 import capstone.capbackend.entity.Chat;
 import capstone.capbackend.entity.User;
+import capstone.capbackend.entity.UserChat;
 import capstone.capbackend.repository.ChatRepository;
 import capstone.capbackend.repository.UserChatRepository;
 import capstone.capbackend.repository.UserRepository;
@@ -62,5 +63,29 @@ public class ChatService {
                         .insertTime(chat.getInsertTime())
                         .build())
                 );
+    }
+
+    public Mono<UserChat> joinChat(Long chatId, Long userId) {
+        return userChatRepository.findByUserIdAndChatId(userId, chatId)
+                .defaultIfEmpty(UserChat.builder().build())
+                .flatMap(userChat -> Mono.zip(
+                        Mono.just(userChat),
+                        userRepository.findById(userId)
+                ))
+                .flatMap(tuple -> {
+                    if (tuple.getT1().getChatId() != null) {
+                        return Mono.error(new IllegalArgumentException("User already joined"));
+                    }
+                    User user = tuple.getT2();
+                    return userChatRepository.save(
+                            UserChat.builder()
+                                    .chatId(chatId)
+                                    .userId(user.getId())
+                                    .userName(user.getNickname())
+                                    .insertTime(LocalDateTime.now())
+                                    .lastChatTime(LocalDateTime.now())
+                                    .build()
+                    );
+                });
     }
 }

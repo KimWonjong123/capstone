@@ -5,6 +5,7 @@ import capstone.capbackend.config.security.UserPrincipal;
 import capstone.capbackend.dto.CreateChatRequestDTO;
 import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
+import capstone.capbackend.entity.UserChat;
 import capstone.capbackend.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,5 +29,10 @@ public class ChatController {
     @GetMapping("/search")
     public Flux<JoiningChatDTO> searchChat(@RequestParam("name") String name, @UserInfo UserPrincipal user) {
         return chatService.searchChat(name, Long.parseLong(user.getUsername()));
+    }
+
+    @PostMapping("/join")
+    public Mono<UserChat> joinChat(@RequestParam("chatId") Long chatId, @UserInfo UserPrincipal user) {
+        return chatService.joinChat(chatId, Long.parseLong(user.getUsername()));
     }
 }
