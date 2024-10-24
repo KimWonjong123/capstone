@@ -31,4 +31,4 @@ secret:
     password: 1234
   kakao:
     client-id: 8bccd7e2ee7227d7de779aa3c538806f
-    redirect-url: http://localhost:8080/auth/oauth/kakao
+    redirect-url: http://localhost:3000/oauth/kakao
