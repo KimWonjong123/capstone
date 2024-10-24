@@ -12,7 +12,7 @@ import java.util.Map;
 @ToString
 public class UserAuthToken extends AbstractAuthenticationToken {
 
-    private final String userId;
+    private final Long userId;
     private final Map<String, Object> claims;
     private static final String CLAIM_KEY_ROLE = "ROLE";
 
@@ -23,7 +23,7 @@ public class UserAuthToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return new UserPrincipal(this.getAuthorities(), this.userId);
+        return new UserPrincipal(this.getAuthorities(), this.userId.toString());
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserAuthToken extends AbstractAuthenticationToken {
 
     public UserAuthToken(Claims claims) {
         super(List.of(new SimpleGrantedAuthority("ROLE")));
-        this.userId = claims.getSubject();
+        this.userId = Long.parseLong(claims.getSubject());
         this.claims = new HashMap<>(claims);
     }
 

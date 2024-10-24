@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
+
 @Table(name = "chat_message_tbl")
 @Getter
 @Builder
@@ -23,5 +25,5 @@ public class ChatMessage {
     private String message;
 
     @CreatedDate
-    private String insertTime;
+    private LocalDateTime insertTime;
 }

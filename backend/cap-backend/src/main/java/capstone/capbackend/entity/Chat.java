@@ -8,6 +8,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table(name = "chat_tbl")
 @Getter
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Chat {
     @Id
-    private Long chatId;
+    private Long id;
 
     @Column
     private Long ownerId;
@@ -26,8 +27,8 @@ public class Chat {
     private String name;
 
     @CreatedDate
-    private LocalDate insertTime;
+    private LocalDateTime insertTime;
 
     @LastModifiedDate
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 }

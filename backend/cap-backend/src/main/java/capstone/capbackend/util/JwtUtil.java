@@ -43,7 +43,7 @@ public class JwtUtil {
         String accessToken = Jwts
                 .builder()
                 .setClaims(claims)
-                .setSubject(String.valueOf(user.getUserId()))
+                .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRES))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
@@ -53,7 +53,7 @@ public class JwtUtil {
 
     public Mono<RefreshToken> generateRefreshToken(User user) {
         return refreshTokenRepository
-                .save(new RefreshToken(UUID.randomUUID().toString(), user.getUserId(), user.getOauthType()));
+                .save(new RefreshToken(UUID.randomUUID().toString(), user.getId(), user.getOauthType()));
     }
 
     public Mono<JwtTokenVO> reissueTokens(String rt) {
@@ -65,7 +65,7 @@ public class JwtUtil {
                             }
                             String[] infos = res.split(":");
                             return Mono.just(User.builder()
-                                    .userId(infos[0])
+                                    .id(Long.parseLong(infos[0]))
                                     .oauthType(infos[1])
                                     .build());
                         })
