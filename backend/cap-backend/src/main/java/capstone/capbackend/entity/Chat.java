@@ -24,6 +24,9 @@ public class Chat {
     private Long ownerId;
 
     @Column
+    private String ownerName;
+
+    @Column
     private String name;
 
     @CreatedDate

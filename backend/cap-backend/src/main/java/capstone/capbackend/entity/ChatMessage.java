@@ -22,6 +22,12 @@ public class ChatMessage {
     private Long userChatId;
 
     @Column
+    private Long userId;
+
+    @Column
+    private String userName;
+
+    @Column
     private String message;
 
     @CreatedDate

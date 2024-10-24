@@ -22,6 +22,9 @@ public class UserChat {
     private Long userId;
 
     @Column
+    private String userName;
+
+    @Column
     private Long chatId;
 
     @CreatedDate
