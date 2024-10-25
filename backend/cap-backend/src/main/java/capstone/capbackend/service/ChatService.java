@@ -55,7 +55,7 @@ public class ChatService {
     }
 
     public Flux<JoiningChatDTO> searchChat(String name, Long userId) {
-        return chatRepository.findByIdNotAndNameContainingOrderByInsertTimeDesc(userId, name)
+        return chatRepository.findByOwnerIdNotAndNameContainingOrderByInsertTimeDesc(userId, name)
                 .flatMap(chat -> Flux.just(JoiningChatDTO.builder()
                         .chatId(chat.getId())
                         .chatName(chat.getName())
