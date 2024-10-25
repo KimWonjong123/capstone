@@ -15,4 +15,6 @@ public interface UserChatRepository extends ReactiveCrudRepository<UserChat, Lon
     Mono<UserChat> findByIdOrderByLastChatTimeDesc(Long chatId);
 
     Mono<Void> deleteAllByUserId(Long userId);
+
+    Mono<Void> deleteAllById(Long id);
 }

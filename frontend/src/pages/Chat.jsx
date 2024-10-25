@@ -9,6 +9,8 @@ export default function Chat() {
     }
     const SERVER_URL = 'http://localhost:8080';
     const CHAT_URI = '/chat/messages';
+    const LEAVE_URI = '/chat/leave';
+    const DELET_URI = '/chat/delete';
     
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -82,12 +84,38 @@ export default function Chat() {
 
     const handleLeaveChat = () => {
         console.log('Leaving chat');
+        fetch(SERVER_URL + LEAVE_URI + '?userChatId=' + userChatId,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('accessToken'),
+                }
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.result) window.location.href = '/main';
+                else console.error('Failed to leave chat');
+            });
         setIsMenuOpen(false);
         // Implement leave chat logic here
     };
 
     const handleRemoveChat = () => {
         console.log('Removing chat');
+        fetch(SERVER_URL + DELET_URI + '?userChatId=' + userChatId,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('accessToken'),
+                }
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.result) window.location.href = '/main';
+                else console.error('Failed to remove chat');
+            });
         setIsMenuOpen(false);
         // Implement remove chat logic here
     };

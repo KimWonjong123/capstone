@@ -12,4 +12,6 @@ public interface ChatMessageRepository extends ReactiveCrudRepository<ChatMessag
 
     Mono<Void> deleteAllByUserId(Long userChatId);
 
+    Mono<Void> deleteAllByUserChatId(Long userChatId);
+
 }

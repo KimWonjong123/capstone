@@ -9,6 +9,7 @@ import capstone.capbackend.dto.JoiningChatDTO;
 import capstone.capbackend.entity.ChatMessage;
 import capstone.capbackend.entity.UserChat;
 import capstone.capbackend.service.ChatService;
+import capstone.capbackend.vo.BinaryResultVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -61,5 +62,15 @@ public class ChatController {
     @PostMapping("/messages")
     public Flux<ChatMessage> sendMessage(@RequestParam("userChatId") Long chatId, @RequestParam("message") String message, @UserInfo UserPrincipal user) {
         return chatService.sendMessage(chatId, Long.parseLong(user.getUsername()), message);
+    }
+
+    @PostMapping("/leave")
+    public Mono<BinaryResultVO> leaveChat(@RequestParam("userChatId") Long userChatId, @UserInfo UserPrincipal user) {
+        return chatService.leaveChat(userChatId, Long.parseLong(user.getUsername()));
+    }
+
+    @DeleteMapping("/delete")
+    public Mono<BinaryResultVO> deleteChat(@RequestParam("chatId") Long chatId) {
+        return chatService.deleteChat(chatId);
     }
 }

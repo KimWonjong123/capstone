@@ -11,6 +11,7 @@ import capstone.capbackend.repository.ChatMessageRepository;
 import capstone.capbackend.repository.ChatRepository;
 import capstone.capbackend.repository.UserChatRepository;
 import capstone.capbackend.repository.UserRepository;
+import capstone.capbackend.vo.BinaryResultVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -170,5 +171,30 @@ public class ChatService {
                         .thenReturn(userChat)
                 )
                 .flatMapMany(userchat -> chatMessageRepository.findByUserChatIdOrderByInsertTimeAsc(userchat.getId()));
+    }
+
+    public Mono<BinaryResultVO> leaveChat(Long userChatId, Long userId) {
+        return userChatRepository.findById(userChatId)
+                .defaultIfEmpty(UserChat.builder().build())
+                .flatMap(userChat -> {
+                    if (userChat.getChatId() == null) return Mono.just(false);
+                    return chatMessageRepository.deleteAllByUserId(userId)
+                            .then(userChatRepository.delete(userChat))
+                            .thenReturn(true);
+                })
+                .flatMap(result -> result ? Mono.just(new BinaryResultVO(true)) : Mono.just(new BinaryResultVO(false)));
+    }
+
+    public Mono<BinaryResultVO> deleteChat(Long userChatId) {
+        return userChatRepository.findById(userChatId)
+                .defaultIfEmpty(UserChat.builder().build())
+                .flatMap(chat -> {
+                    if (chat.getId() == null) return Mono.just(false);
+                    return chatMessageRepository.deleteAllByUserChatId(userChatId)
+                            .then(userChatRepository.deleteAllById(userChatId))
+                            .then(chatRepository.deleteAllById(chat.getChatId()))
+                            .thenReturn(true);
+                })
+                .flatMap(result -> result ? Mono.just(new BinaryResultVO(true)) : Mono.just(new BinaryResultVO(false)));
     }
 }

@@ -19,4 +19,6 @@ public interface ChatRepository extends ReactiveCrudRepository<Chat, Long> {
     Mono<Chat> findById(Long chatId);
 
     Mono<Void> deleteAllByOwnerId(Long userId);
+
+    Mono<Void> deleteAllById(Long chatId);
 }
