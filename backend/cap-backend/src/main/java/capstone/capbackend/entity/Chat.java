@@ -7,7 +7,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "chat_tbl")
@@ -33,5 +32,6 @@ public class Chat {
     private LocalDateTime insertTime;
 
     @LastModifiedDate
-    private LocalDateTime updateTime;
+    @Setter
+    private LocalDateTime lastChatTime;
 }

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, MoreVertical, X, ArrowLeft } from 'lucide-react';
+import { Send, MoreVertical, X, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { getCookie } from '../utils/Cookie';
 
 export default function Chat() {
@@ -16,6 +16,7 @@ export default function Chat() {
     const [newMessage, setNewMessage] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [me, setMe] = useState({});
+    const [failedAction, setFailedAction] = useState(null);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -95,10 +96,12 @@ export default function Chat() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) window.location.href = '/main';
-                else console.error('Failed to leave chat');
+                else {
+                    setIsMenuOpen(false);
+                    setFailedAction('leave');
+                };
             });
         setIsMenuOpen(false);
-        // Implement leave chat logic here
     };
 
     const handleRemoveChat = () => {
@@ -114,10 +117,12 @@ export default function Chat() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.result) window.location.href = '/main';
-                else console.error('Failed to remove chat');
+                else {
+                    setIsMenuOpen(false);
+                    setFailedAction('delete');
+                };
             });
         setIsMenuOpen(false);
-        // Implement remove chat logic here
     };
     
     const handleBackToMain = () => {
@@ -208,6 +213,31 @@ export default function Chat() {
                                 className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                             >
                                 Remove Chat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Confirmation Popup */}
+            {failedAction && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-sm">
+                        <div className="flex items-center mb-4 text-red-500">
+                            <AlertTriangle className="mr-2" />
+                            <h2 className="text-xl font-bold">Warning</h2>
+                        </div>
+                        <p className="mb-6 text-gray-700">
+                            {failedAction === 'leave'
+                                ? "Owner of the chat cannot leave."
+                                : "Only the owner can delete the chat."}
+                        </p>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => setFailedAction(null)}
+                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                            >
+                                Okay
                             </button>
                         </div>
                     </div>

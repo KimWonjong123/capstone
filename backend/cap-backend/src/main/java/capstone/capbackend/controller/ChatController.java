@@ -45,7 +45,7 @@ public class ChatController {
     }
 
     @GetMapping("/list/created")
-    public Flux<JoiningChatDTO> getCreatedChats(@UserInfo UserPrincipal user) {
+    public Flux<ChatInfoDTO> getCreatedChats(@UserInfo UserPrincipal user) {
         return chatService.getCreatedChats(Long.parseLong(user.getUsername()));
     }
 
@@ -60,8 +60,10 @@ public class ChatController {
     }
 
     @PostMapping("/messages")
-    public Flux<ChatMessage> sendMessage(@RequestParam("userChatId") Long chatId, @RequestParam("message") String message, @UserInfo UserPrincipal user) {
-        return chatService.sendMessage(chatId, Long.parseLong(user.getUsername()), message);
+    public Flux<ChatMessage> sendMessage(@RequestParam("userChatId") Long userChatId,
+                                         @RequestParam("message") String message,
+                                         @UserInfo UserPrincipal user) {
+        return chatService.sendMessage(userChatId, Long.parseLong(user.getUsername()), message);
     }
 
     @PostMapping("/leave")
@@ -70,7 +72,7 @@ public class ChatController {
     }
 
     @DeleteMapping("/delete")
-    public Mono<BinaryResultVO> deleteChat(@RequestParam("chatId") Long chatId) {
-        return chatService.deleteChat(chatId);
+    public Mono<BinaryResultVO> deleteChat(@RequestParam("userChatId") Long userChatId, @UserInfo UserPrincipal user) {
+        return chatService.deleteChat(userChatId, Long.parseLong(user.getUsername()));
     }
 }

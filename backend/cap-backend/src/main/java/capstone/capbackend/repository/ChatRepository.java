@@ -8,11 +8,9 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ChatRepository extends ReactiveCrudRepository<Chat, Long> {
-    Flux<Chat> findByOwnerIdOrderByInsertTimeDesc(Long userId);
+    Flux<Chat> findByOwnerIdOrderByLastChatTimeDesc(Long userId);
 
-    Flux<Chat> findByOwnerIdAndNameContaining(Long userId, String name);
-
-    Mono<Chat> findByOwnerIdAndName(Long userId, String name);
+    Mono<Chat> findByOwnerIdAndName(Long ownerId, String name);
 
     Flux<Chat> findByOwnerIdNotAndNameContainingOrderByInsertTimeDesc(Long userId, String name);
 
@@ -20,5 +18,4 @@ public interface ChatRepository extends ReactiveCrudRepository<Chat, Long> {
 
     Mono<Void> deleteAllByOwnerId(Long userId);
 
-    Mono<Void> deleteAllById(Long chatId);
 }

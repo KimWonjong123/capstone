@@ -17,6 +17,7 @@ export default function MyChat() {
     const CREATED_URI = '/chat/list/created';
 
     const [myChats, setMyChats] = useState([]);
+    const [selectedChat, setSelectedChat] = useState(null);
 
     useEffect(() => {
         fetch(SERVER_URL + CREATED_URI,
@@ -37,6 +38,12 @@ export default function MyChat() {
             });
     }, []);
 
+    useEffect(() => {
+        if (selectedChat) {
+            window.location.href = `/chat?userChatId=${selectedChat.userChatId}`;
+        }
+    }, [selectedChat]);
+
     return (
         <div className="flex flex-col h-screen bg-gray-100">
             {/* Header */}
@@ -49,7 +56,7 @@ export default function MyChat() {
                 {myChats.length > 0 ? (
                     <ul className="space-y-4">
                         {myChats.map((chat) => (
-                            <MyChatInfo  {...chat} />
+                            <MyChatInfo  {...chat} setSelectedChat={setSelectedChat} />
                         ))}
                     </ul>
                 ) : (

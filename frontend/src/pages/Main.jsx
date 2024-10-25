@@ -34,6 +34,7 @@ export default function MainPage() {
                     joiningChats.push(element);
                 });
                 setJoiningChats([...joiningChats]);
+                console.log(joiningChats)
             });
     }, []);
 

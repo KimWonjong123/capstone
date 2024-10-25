@@ -20,6 +20,9 @@ public class ChatMessage {
     private Long id;
 
     @Column
+    private Long chatId;
+
+    @Column
     private Long userChatId;
 
     @Column

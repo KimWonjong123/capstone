@@ -11,7 +11,7 @@ export default function ChatInfo(props) {
                 <div>
                     <h2 className="font-semibold text-lg text-gray-800">{props.chatName}</h2>
                     <p className="text-sm text-gray-600">{props.userName}</p>
-                    <span className="text-xs text-gray-400 mt-1">{props.insertTime}</span>
+                    <span className="text-xs text-gray-400 mt-1">{props.lastChatTime}</span>
                 </div>
                 <ChevronRight className="text-gray-400" />
             </button>
