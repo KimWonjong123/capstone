@@ -4,8 +4,10 @@ import capstone.capbackend.dto.ChatInfoDTO;
 import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
 import capstone.capbackend.entity.Chat;
+import capstone.capbackend.entity.ChatMessage;
 import capstone.capbackend.entity.User;
 import capstone.capbackend.entity.UserChat;
+import capstone.capbackend.repository.ChatMessageRepository;
 import capstone.capbackend.repository.ChatRepository;
 import capstone.capbackend.repository.UserChatRepository;
 import capstone.capbackend.repository.UserRepository;
@@ -26,6 +28,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final UserChatRepository userChatRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Transactional
     public Mono<CreateChatResponseDTO> createChat(Long ownerId, String chatName) {
@@ -119,20 +122,53 @@ public class ChatService {
                 );
     }
 
-    public Flux<ChatInfoDTO> getJoinedCreatedChats(Long chatId, Long userId) {
-        return userChatRepository.findByChatIdOrderByLastChatTimeDesc(chatId)
-                .flatMap(userChat -> Mono.zip(
-                        chatRepository.findById(userChat.getChatId()),
-                        userRepository.findById(userChat.getUserId()),
-                        Mono.just(userChat)
-                ))
-                .flatMap(tuple -> Flux.just(ChatInfoDTO.builder()
-                        .chatId(tuple.getT1().getId())
-                        .chatName(tuple.getT1().getName())
-                        .userId(tuple.getT1().getOwnerId())
-                        .userName(tuple.getT1().getOwnerName())
-                        .lastChatTime(tuple.getT3().getLastChatTime())
-                        .userChatId(tuple.getT3().getId())
-                        .build()));
+//    public Flux<ChatInfoDTO> getJoinedCreatedChats(Long chatId, Long userId) {
+//        return userChatRepository.findByChatIdOrderByLastChatTimeDesc(chatId)
+//                .flatMap(userChat -> Mono.zip(
+//                        chatRepository.findById(userChat.getChatId()),
+//                        userRepository.findById(userChat.getUserId()),
+//                        Mono.just(userChat)
+//                ))
+//                .flatMap(tuple -> Flux.just(ChatInfoDTO.builder()
+//                        .chatId(tuple.getT1().getId())
+//                        .chatName(tuple.getT1().getName())
+//                        .userId(tuple.getT1().getOwnerId())
+//                        .userName(tuple.getT1().getOwnerName())
+//                        .lastChatTime(tuple.getT3().getLastChatTime())
+//                        .userChatId(tuple.getT3().getId())
+//                        .build()));
+//    }
+
+    public Flux<ChatMessage> getMessages(Long userChatId) {
+        return userChatRepository.findByIdOrderByLastChatTimeDesc(userChatId)
+                .defaultIfEmpty(UserChat.builder().build())
+                .flatMap(userChat -> {
+                    if (userChat.getChatId() == null) return Mono.error(new IllegalArgumentException("Chat not found"));
+                    else return Mono.just(userChat);
+                })
+                .flatMapMany(userChat -> chatMessageRepository.findByUserChatIdOrderByInsertTimeAsc(userChatId));
+    }
+
+    public Flux<ChatMessage> sendMessage(Long userChatId, Long userId, String message) {
+        return userChatRepository.findById(userChatId)
+                .defaultIfEmpty(UserChat.builder().build())
+                .flatMap(userChat -> {
+                    if (userChat.getChatId() == null) return Mono.error(new IllegalArgumentException("Chat not found"));
+                    userChat.setLastChatTime(LocalDateTime.now());
+                    return userChatRepository.save(userChat);
+                })
+                .flatMap(userChat -> userRepository.findById(userId)
+                        .flatMap(user -> chatMessageRepository.save(
+                                ChatMessage.builder()
+                                        .userChatId(userChat.getId())
+                                        .userId(user.getId())
+                                        .userName(user.getNickname())
+                                        .message(message)
+                                        .insertTime(LocalDateTime.now())
+                                        .build()
+                        ))
+                        .thenReturn(userChat)
+                )
+                .flatMapMany(userchat -> chatMessageRepository.findByUserChatIdOrderByInsertTimeAsc(userchat.getId()));
     }
 }

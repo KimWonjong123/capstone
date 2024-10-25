@@ -40,7 +40,6 @@ export default function SearchResults() {
             .catch((error) => console.error('Error:', error))
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 data.forEach(element => {
                     element.userName = element.ownerName;
                     searchResults.push(element);
@@ -69,8 +68,11 @@ export default function SearchResults() {
                 }
             }
         )
-            .catch((error) => console.error('Error:', error))
-            .then(() => window.location.href = '/main');
+            .then((response) => response.json())
+            .then((data) => {
+                window.location.href = `/chat?userChatId=${data.id}`;
+            })
+            .catch((error) => window.location.href = '/main');
     };
 
     return (

@@ -7,6 +7,7 @@ import ChatInfo from '../components/ChatInfo';
 
 export default function MainPage() {
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedChat, setSelectedChat] = useState(null);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -35,6 +36,12 @@ export default function MainPage() {
                 setJoiningChats([...joiningChats]);
             });
     }, []);
+
+    useEffect(() => {
+        if (selectedChat) {
+            window.location.href = `/chat?userChatId=${selectedChat.userChatId}`;
+        }
+    }, [selectedChat])
 
     return (
         <div className="flex flex-col h-screen bg-gray-100">
@@ -74,7 +81,7 @@ export default function MainPage() {
                     {joiningChats.length > 0 ? (
                         <ul className="space-y-4">
                             {joiningChats.map((chat) => (
-                                <ChatInfo {...chat} />
+                                <ChatInfo {...chat} setSelectedChat={setSelectedChat} />
                             ))}
                         </ul>
                     ) : (

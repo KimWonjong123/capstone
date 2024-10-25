@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ChatMessageRepository extends ReactiveCrudRepository<ChatMessage, Long> {
-    Flux<ChatMessage> findByUserChatIdOrderByInsertTimeDesc(Long userChatId);
+    Flux<ChatMessage> findByUserChatIdOrderByInsertTimeAsc(Long userChatId);
 
     Mono<Void> deleteAllByUserId(Long userChatId);
 

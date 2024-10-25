@@ -36,6 +36,7 @@ public class UserChat {
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Setter
     private LocalDateTime lastChatTime;
 
     @Transient

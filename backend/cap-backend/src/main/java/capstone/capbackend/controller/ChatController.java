@@ -6,6 +6,7 @@ import capstone.capbackend.dto.ChatInfoDTO;
 import capstone.capbackend.dto.CreateChatRequestDTO;
 import capstone.capbackend.dto.CreateChatResponseDTO;
 import capstone.capbackend.dto.JoiningChatDTO;
+import capstone.capbackend.entity.ChatMessage;
 import capstone.capbackend.entity.UserChat;
 import capstone.capbackend.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,18 @@ public class ChatController {
         return chatService.getCreatedChats(Long.parseLong(user.getUsername()));
     }
 
-    @GetMapping("/list/created/joined")
-    public Flux<ChatInfoDTO> getJoinedCreatedChats(@RequestParam("chatId") Long chatId, @UserInfo UserPrincipal user) {
-        return chatService.getJoinedCreatedChats(chatId, Long.parseLong(user.getUsername()));
+//    @GetMapping("/list/created/joined")
+//    public Flux<ChatInfoDTO> getJoinedCreatedChats(@RequestParam("chatId") Long chatId, @UserInfo UserPrincipal user) {
+//        return chatService.getJoinedCreatedChats(chatId, Long.parseLong(user.getUsername()));
+//    }
+
+    @GetMapping("/messages")
+    public Flux<ChatMessage> getMessages(@RequestParam("userChatId") Long userChatId) {
+        return chatService.getMessages(userChatId);
+    }
+
+    @PostMapping("/messages")
+    public Flux<ChatMessage> sendMessage(@RequestParam("userChatId") Long chatId, @RequestParam("message") String message, @UserInfo UserPrincipal user) {
+        return chatService.sendMessage(chatId, Long.parseLong(user.getUsername()), message);
     }
 }

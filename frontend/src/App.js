@@ -5,6 +5,7 @@ import Main from "./pages/Main";
 import MyChat from "./pages/MyChat";
 import MyPage from "./pages/MyPage";
 import SearchResults from "./pages/Search";
+import Chat from "./pages/Chat";
 
 function App() {
     return (
@@ -16,6 +17,8 @@ function App() {
                 <Route path="/mychat" element={<MyChat />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/search" element={<SearchResults />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/chat/:userChatId" element={<Chat />} />
             </Routes>
         </div>
     );

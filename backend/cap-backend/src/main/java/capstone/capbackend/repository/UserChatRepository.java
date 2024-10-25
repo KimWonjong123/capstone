@@ -12,7 +12,7 @@ public interface UserChatRepository extends ReactiveCrudRepository<UserChat, Lon
 
     Mono<UserChat> findByUserIdAndChatId(Long userId, Long chatId);
 
-    Flux<UserChat> findByChatIdOrderByLastChatTimeDesc(Long chatId);
+    Mono<UserChat> findByIdOrderByLastChatTimeDesc(Long chatId);
 
     Mono<Void> deleteAllByUserId(Long userId);
 }
