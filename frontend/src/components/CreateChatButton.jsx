@@ -1,17 +1,29 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { getCookie } from "../utils/Cookie";
 
 export default function CreateChatButton() {
+
+    const SERVER_URL = "http://localhost:8080";
+    const CHAT_URI = "/chat";
     
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [newChatName, setNewChatName] = useState('');
 
     const handleCreateChat = (e) => {
         e.preventDefault();
-        // Implement chat creation functionality here
-        console.log('Creating new chat:', newChatName);
-        setNewChatName('');
-        setIsPopupOpen(false);
+        fetch(SERVER_URL + CHAT_URI,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getCookie('accessToken'),
+                },
+                body: JSON.stringify({ name: newChatName })
+            }
+        )
+            .catch((error) => console.error('Error:', error))
+            .then(() => window.location.href = '/myChat');
     };
     
     return (

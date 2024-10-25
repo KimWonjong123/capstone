@@ -10,7 +10,6 @@ export default function MainPage() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log('Searching for:', searchQuery);
         window.location.href = `/search?name=${searchQuery}`;
     };
     const [joiningChats, setJoiningChats] = useState([]);
@@ -31,7 +30,6 @@ export default function MainPage() {
             .then((response) => response.json())
             .then((data) => {
                 data.forEach(element => {
-                    console.log(element);
                     joiningChats.push(element);
                 });
                 setJoiningChats([...joiningChats]);

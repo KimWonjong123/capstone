@@ -31,7 +31,6 @@ export default function MyChat() {
             .then((response) => response.json())
             .then((data) => {
                 data.forEach(element => {
-                    console.log(element);
                     myChats.push(element);
                 });
                 setMyChats([...myChats]);

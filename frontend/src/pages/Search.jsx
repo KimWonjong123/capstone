@@ -15,6 +15,7 @@ export default function SearchResults() {
 
     const SERVER_URL = 'http://localhost:8080';
     const SEARCH_URI = '/chat/search';
+    const JOIN_URI = '/chat/join';
     
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedChat, setSelectedChat] = useState(null);
@@ -42,7 +43,6 @@ export default function SearchResults() {
                 console.log(data);
                 data.forEach(element => {
                     element.userName = element.ownerName;
-                    console.log(element);
                     searchResults.push(element);
                 });
                 setSearchResults([...searchResults]);
@@ -55,14 +55,22 @@ export default function SearchResults() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log('Searching for:', searchQuery);
         window.location.href = `/search?name=${searchQuery}`;
     };
 
     const handleJoinChat = () => {
         // Implement join chat logic here
-        console.log('Joining chat:', selectedChat.name);
-        setSelectedChat(null);
+        console.log('Joining chat:', selectedChat);
+        fetch(SERVER_URL + JOIN_URI + "?chatId=" + selectedChat.chatId,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('accessToken'),
+                }
+            }
+        )
+            .catch((error) => console.error('Error:', error))
+            .then(() => window.location.href = '/main');
     };
 
     return (
@@ -106,7 +114,7 @@ export default function SearchResults() {
                     {searchResults.length > 0 ? (
                         <ul className="space-y-4">
                             {searchResults.map((chat) => (
-                                <ChatInfo  {...chat} />
+                                <ChatInfo  {...chat} setSelectedChat={setSelectedChat} />
                             ))}
                         </ul>
                     ) : (
@@ -135,7 +143,7 @@ export default function SearchResults() {
                             </button>
                         </div>
                         <p className="mb-6">
-                            Do you want to join the chat room "{selectedChat.name}"?
+                            Do you want to join the chat room "{selectedChat.chatName}"?
                         </p>
                         <div className="flex justify-end space-x-4">
                             <button
