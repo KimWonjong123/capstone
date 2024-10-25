@@ -17,4 +17,6 @@ public interface ChatRepository extends ReactiveCrudRepository<Chat, Long> {
     Flux<Chat> findByIdNotAndNameContainingOrderByInsertTimeDesc(Long userId, String name);
 
     Mono<Chat> findById(Long chatId);
+
+    Mono<Void> deleteAllByOwnerId(Long userId);
 }

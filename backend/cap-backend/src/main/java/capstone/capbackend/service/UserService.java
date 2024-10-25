@@ -1,9 +1,10 @@
 package capstone.capbackend.service;
 
-import capstone.capbackend.repository.RefreshTokenRepository;
-import capstone.capbackend.repository.UserRepository;
+import capstone.capbackend.entity.User;
+import capstone.capbackend.repository.*;
 import capstone.capbackend.util.JwtUtil;
 import capstone.capbackend.util.NicknameGenerationUtil;
+import capstone.capbackend.vo.BinaryResultVO;
 import capstone.capbackend.vo.JwtTokenVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,10 @@ import reactor.core.publisher.Mono;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserChatRepository userChatRepository;
+    private final ChatRepository chatRepository;
+    private final ChatMessageRepository chatMessageRepository;
     private final JwtUtil jwtUtil;
-    private final NicknameGenerationUtil nicknameGenerationUtil;
 
     public Mono<JwtTokenVO> reissueToken(String rt) {
         return jwtUtil.reissueTokens(rt);
@@ -30,6 +32,24 @@ public class UserService {
                 .flatMap(user -> jwtUtil.generateAccessToken(user)
                         .zipWith(jwtUtil.generateRefreshToken(user))
                         .map(tuple -> new JwtTokenVO(tuple.getT1(), tuple.getT2().refreshToken()))
+                );
+    }
+
+    public Mono<User> getMe(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    public Mono<BinaryResultVO> deleteAccount(Long userId) {
+        return userRepository.findById(userId)
+                .switchIfEmpty(Mono.error(new RuntimeException("User not found")))
+                .flatMap(user -> chatMessageRepository.deleteAllByUserId(userId)
+                        .then(userChatRepository.deleteAllByUserId(userId))
+                        .then(chatRepository.deleteAllByOwnerId(userId))
+                        .then(userRepository.delete(user))
+                        .then(Mono.just(user)
+                        ))
+                .flatMap(user -> userRepository.delete(user)
+                        .then(Mono.just(new BinaryResultVO(true)))
                 );
     }
 }
