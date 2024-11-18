@@ -13,7 +13,7 @@ import CreateChatButton from '../components/CreateChatButton';
 
 export default function MyChat() {
 
-    const SERVER_URL = 'http://localhost:8080/api';
+    const SERVER_URL = 'http://150.230.255.50/api';
     const CREATED_URI = '/chat/list/created';
 
     const [myChats, setMyChats] = useState([]);

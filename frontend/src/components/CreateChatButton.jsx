@@ -4,7 +4,7 @@ import { getCookie } from "../utils/Cookie";
 
 export default function CreateChatButton() {
 
-    const SERVER_URL = "http://localhost:8080/api";
+    const SERVER_URL = "http://http://150.230.255.50/api";
     const CHAT_URI = "/chat";
     
     const [isPopupOpen, setIsPopupOpen] = useState(false);

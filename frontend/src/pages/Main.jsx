@@ -15,7 +15,7 @@ export default function MainPage() {
     };
     const [joiningChats, setJoiningChats] = useState([]);
 
-    const SERVER_URL = "http://localhost:8080/api";
+    const SERVER_URL = "http://150.230.255.50/api";
     const CHAT_URI = "/chat/list/joining";
 
     useEffect(() => {
