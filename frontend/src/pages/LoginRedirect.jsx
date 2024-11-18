@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { setCookie } from '../utils/Cookie';
 
 export default function LoginRedirect() {
-    const SERVER_URL = "http://localhost:8080";
+    const SERVER_URL = "http://localhost:8080/api";
     const REDIRECT_URL = "/auth/oauth/kakao";
     const code = new URLSearchParams(window.location.search).get('code');
     

@@ -7,7 +7,7 @@ export default function Login() {
     window.location.href = kakaoUrl;
   };
 
-  const SERVER_URL = "http://localhost:8080";
+  const SERVER_URL = "http://localhost:8080/api";
   const LOGIN_URI = "/auth/oauth/kakao/url";
   const [kakaoUrl, setKakaoUrl] = useState();
 
