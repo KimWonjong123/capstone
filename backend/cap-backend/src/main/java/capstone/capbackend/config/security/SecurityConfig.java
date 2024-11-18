@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeExchange(exchanges -> exchanges
 //                        .pathMatchers("auth/token/**").authenticated()
-                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/api/auth/**").permitAll()
                         .anyExchange().authenticated())
                 .headers().frameOptions().mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN)
                 .and()
