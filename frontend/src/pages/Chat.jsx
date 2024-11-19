@@ -8,7 +8,7 @@ export default function Chat() {
     if (userChatId === null) {
         window.location.href = '/main';
     }
-    const SERVER_URL = 'http://150.230.255.50';
+    const SERVER_URL = 'http://150.230.255.50/api';
     const CHAT_URI = '/chat/messages';
     const LEAVE_URI = '/chat/leave';
     const DELET_URI = '/chat/delete';
