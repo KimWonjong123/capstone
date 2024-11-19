@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, MoreVertical, X, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { getCookie } from '../utils/Cookie';
+import useInterval from '../utils/useInterval';
 
 export default function Chat() {
     const userChatId = new URLSearchParams(window.location.search).get('userChatId');
     if (userChatId === null) {
         window.location.href = '/main';
     }
-    const SERVER_URL = 'http://150.230.255.50/api';
+    const SERVER_URL = 'http://localhost:8080';
     const CHAT_URI = '/chat/messages';
     const LEAVE_URI = '/chat/leave';
     const DELET_URI = '/chat/delete';
@@ -45,6 +46,23 @@ export default function Chat() {
                 window.location.href = '/main';
             });
     }, []);
+
+    async function fetchMessages() {
+        fetch(SERVER_URL + CHAT_URI + '?userChatId=' + userChatId,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('accessToken'),
+                }
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setMessages([...data]);
+            });
+    }
+
+    useInterval(fetchMessages, 1000);
 
     useEffect(() => {
         fetch(SERVER_URL + '/user/me',
